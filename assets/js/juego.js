@@ -1,6 +1,7 @@
 let deck = [];
 let types = ['C','D','S','H'];
 let specials = ['A', 'J', 'Q', 'K'];
+let acumulador = [];
 
 let puntosJugador = 0,
     puntosComputador = 0;
@@ -8,11 +9,13 @@ let puntosJugador = 0,
 //Referencias html
 let btnPedir = document.querySelector('#btn-pedir');
 let btnDetener = document.querySelector('#btn-detener');
+let btnNuevoJuego = document.querySelector("#btn-nuevo");
 let puntajeJugador = document.querySelector('small');
 let jugadorCartas = document.querySelector('#jugador-cartas');
 let computadorCartas = document.querySelector('#computadora-cartas');
 let aside = document.querySelectorAll('aside');
 let puntajeComputador = document.querySelectorAll('small');
+
 
 // Esta funcion me permite crear una nueva baraja 
 const crearDeck = () => {
@@ -34,13 +37,13 @@ const crearDeck = () => {
 }
 
 // Esta funcion me permite tomar una nueva carta
-const pedirCarta = () => {
-    if (deck.length === 0){
+const pedirCarta = (baraja) => {
+    if (baraja.length === 0){
         throw "No hay mas cartas"
     }else{
-        const carta =  deck % 2 === 0 ?  deck.shift() : deck.pop();
+        const seleccion =  baraja % 2 === 0 ?  baraja.shift() : baraja.pop();
 
-        return carta; 
+        return seleccion; 
     }
     
 }
@@ -60,31 +63,47 @@ const valorCarta = ( carta ) => {
 // Eventos
 
 btnPedir.addEventListener('click', () =>{
-    let carta = pedirCarta();
+
+    let carta = pedirCarta(deck);
+
+    acumulador.push(valorCarta(carta));
     puntosJugador = puntosJugador + valorCarta(carta);
+
+    let nuevaCarta = document.createElement('img');
+        nuevaCarta.className = 'carta';
+        nuevaCarta.src = `assets/cartas/cartas/${carta}.png`;
+        jugadorCartas.append(nuevaCarta);
 
     puntajeJugador.innerText = puntosJugador;
 
     if(puntosJugador < 21){
     
-        //Crear carta
-        let nuevaCarta = document.createElement('img');
-        nuevaCarta.className = 'carta';
-        nuevaCarta.src = `assets/cartas/cartas/${carta}.png`;
         jugadorCartas.append(nuevaCarta);
 
     }else if(puntosJugador > 21){
-        let nuevaCarta = document.createElement('img');
-        nuevaCarta.className = 'carta';
-        nuevaCarta.src = `assets/cartas/cartas/${carta}.png`;
-        jugadorCartas.append(nuevaCarta);
-        btnPedir.disabled = true;
-        aside[0].style.display = 'flex';
+        
+        let index = acumulador.indexOf(11);
+        if (index !== -1){
+            acumulador[index] = 1;
+            puntosJugador = acumulador.reduce((total, card) => total+card)
+            window.alert("As cambia de valor de 11 a 1");
+            puntajeJugador.innerText = puntosJugador;
+
+        }else{
+            btnPedir.disabled = true;
+            aside[0].style.display = 'flex';
+            jugadorCartas.append(nuevaCarta);
+        }
+         
+        
+
        
     }else{
         btnPedir.disabled = true;
         aside[1].style.display = 'flex';
+        jugadorCartas.append(nuevaCarta);
     }
+    
 
     console.log(carta);
     console.log(puntosJugador);
@@ -92,20 +111,24 @@ btnPedir.addEventListener('click', () =>{
 );
 
 btnDetener.addEventListener('click', async () => {
+    btnDetener.disabled = true;
+    btnDetener.style.backgroundColor = '#c82333';
 
     while ( puntosComputador <= puntosJugador ){
-        let carta = pedirCarta();
+        let carta = pedirCarta(deck);
+        console.warn(carta);
         puntosComputador = puntosComputador + valorCarta(carta);
         let nuevaCarta = document.createElement('img');
         
         if (puntosComputador > 21) {
             //let puntosDeDiferencia = (puntosJugador-(puntosComputador-valorCarta(carta)));
-            let puntosAdicionales = Math.floor(Math.random()*3)+1;
-            let cartaAmañada = (puntajeJugador+puntosAdicionales<21) ? puntosAdicionales : 2;
-            puntosComputador = (puntosComputador-valorCarta(carta)) + cartaAmañada;
-            //let nuevaCarta = document.createElement('img');
+            let arregloAmañado = (puntosComputador-valorCarta(carta)) == 20 ? deck.filter(cartas => ["AH" , "AD" , "AS" , "AC"].includes(cartas)) : deck.filter(cartas => valorCarta(cartas) > puntosJugador - (puntosComputador-valorCarta(carta)) && valorCarta(cartas)  <= 21 - (puntosComputador-valorCarta(carta)) );
+            let cartaAmañada = pedirCarta(arregloAmañado);
+            puntosComputador = (puntosComputador-valorCarta(carta)) + (valorCarta(cartaAmañada) == 11 ? 1 : valorCarta(cartaAmañada));
             nuevaCarta.className = 'carta';
-            nuevaCarta.src = `assets/cartas/cartas/${(cartaAmañada==1 ? A : cartaAmañada)}H.png`;
+            nuevaCarta.src = `assets/cartas/cartas/${cartaAmañada}.png`;
+
+            
             
         }else {
             
@@ -120,10 +143,12 @@ btnDetener.addEventListener('click', async () => {
        
         await demora(2000);
         
-    }
+    }  
+});
+
+btnNuevoJuego.addEventListener('click', () => {
 
 
-    
-    
-})
+} )
+
 
