@@ -114,20 +114,50 @@ btnDetener.addEventListener('click', async () => {
     btnDetener.disabled = true;
     btnDetener.style.backgroundColor = '#c82333';
 
-    while ( puntosComputador <= puntosJugador ){
+    if (puntosJugador == 14 ) {
+        while ( puntosComputador < 21 ){
+            let carta = pedirCarta(deck);
+            puntosComputador = puntosComputador + valorCarta(carta);
+            let nuevaCarta = document.createElement('img');
+            nuevaCarta.className = 'carta';
+            nuevaCarta.src = `assets/cartas/cartas/${carta}.png`;
+
+            if ( puntosComputador > 21 ){
+                await demora(2000);
+                puntajeComputador[1].innerText = puntosComputador;
+                computadorCartas.append(nuevaCarta);
+                await demora(2000);
+                aside[1].style.display = 'flex';
+    
+                break;
+            }else if ( puntosComputador == 21 ){
+                puntajeComputador[1].innerText = puntosComputador;
+                computadorCartas.append(nuevaCarta);
+                aside[0].style.display = 'flex';
+            }
+
+            puntajeComputador[1].innerText = puntosComputador;
+            computadorCartas.append(nuevaCarta);
+            await demora(2000);
+        }
+    } else{
+
+    while ( puntosComputador <= puntosJugador && puntosComputador !== 21){
         let carta = pedirCarta(deck);
         console.warn(carta);
         puntosComputador = puntosComputador + valorCarta(carta);
         let nuevaCarta = document.createElement('img');
         
-        if (puntosComputador > 21) {
+        if (puntosComputador > 21 && puntosJugador !== 21) {
+           
             //let puntosDeDiferencia = (puntosJugador-(puntosComputador-valorCarta(carta)));
             let arregloAmañado = (puntosComputador-valorCarta(carta)) == 20 ? deck.filter(cartas => ["AH" , "AD" , "AS" , "AC"].includes(cartas)) : deck.filter(cartas => valorCarta(cartas) > puntosJugador - (puntosComputador-valorCarta(carta)) && valorCarta(cartas)  <= 21 - (puntosComputador-valorCarta(carta)) );
             let cartaAmañada = pedirCarta(arregloAmañado);
             puntosComputador = (puntosComputador-valorCarta(carta)) + (valorCarta(cartaAmañada) == 11 ? 1 : valorCarta(cartaAmañada));
             nuevaCarta.className = 'carta';
             nuevaCarta.src = `assets/cartas/cartas/${cartaAmañada}.png`;
-
+            await demora(2000);
+            aside[0].style.display = 'flex';
             
             
         }else {
@@ -135,7 +165,14 @@ btnDetener.addEventListener('click', async () => {
             //let nuevaCarta = document.createElement('img');
             nuevaCarta.className = 'carta';
             nuevaCarta.src = `assets/cartas/cartas/${carta}.png`;
-            
+            if (puntosComputador > puntosJugador){
+                puntajeComputador[1].innerText = puntosComputador;
+                computadorCartas.append(nuevaCarta);
+                await demora(2000);
+                puntosJugador == 21 ? aside[1].style.display = 'flex' : aside[0].style.display = 'flex';
+                
+                break;
+            }
         }
 
         puntajeComputador[1].innerText = puntosComputador;
@@ -143,12 +180,27 @@ btnDetener.addEventListener('click', async () => {
        
         await demora(2000);
         
-    }  
+    }}
 });
 
-btnNuevoJuego.addEventListener('click', () => {
+btnNuevoJuego.addEventListener('click', async () => {
+   
+    let imagenes = document.querySelectorAll('img');
+    imagenes.forEach( (img, index) => setTimeout(() => img.remove() , index*300) );
 
+    await demora(1000);
 
-} )
+    puntajeJugador.innerText = 0
+    puntajeComputador[1].innerText = 0;
+
+    if (aside[0].style.display == 'flex' || aside[1].style.display == 'flex') {
+        aside[0].style.display = 'none';
+        aside[1].style.display = 'none';
+    }
+    btnDetener.disabled = false;
+    btnPedir.disabled = false;
+    
+
+} );
 
 
