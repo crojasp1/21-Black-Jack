@@ -104,7 +104,7 @@ btnPedir.addEventListener('click', () =>{
         jugadorCartas.append(nuevaCarta);
     }
     
-
+    console.log('baraja', deck.length);
     console.log(carta);
     console.log(puntosJugador);
 }
@@ -145,6 +145,7 @@ btnDetener.addEventListener('click', async () => {
     while ( puntosComputador <= puntosJugador && puntosComputador !== 21){
         let carta = pedirCarta(deck);
         console.warn(carta);
+        console.warn('baraja', deck.length);
         puntosComputador = puntosComputador + valorCarta(carta);
         let nuevaCarta = document.createElement('img');
         
@@ -190,8 +191,14 @@ btnNuevoJuego.addEventListener('click', async () => {
 
     await demora(1000);
 
+    deck = [];
+    crearDeck();
+
     puntajeJugador.innerText = 0
     puntajeComputador[1].innerText = 0;
+
+    puntosJugador = 0;
+    puntosComputador = 0;
 
     if (aside[0].style.display == 'flex' || aside[1].style.display == 'flex') {
         aside[0].style.display = 'none';
@@ -201,6 +208,7 @@ btnNuevoJuego.addEventListener('click', async () => {
     btnPedir.disabled = false;
     
     btnDetener.style.backgroundColor = "#0069d9";
+    console.log('puntosjaJug', puntajeJugador.innerText);
 
 } );
 
