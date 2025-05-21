@@ -200,6 +200,7 @@ btnNuevoJuego.addEventListener('click', async () => {
     btnDetener.disabled = false;
     btnPedir.disabled = false;
     
+    btnDetener.style.backgroundColor = "#0069d9";
 
 } );
 
