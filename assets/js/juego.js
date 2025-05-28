@@ -85,7 +85,7 @@ btnPedir.addEventListener('click', () =>{
     if(puntosJugador > 21){
         
         let index = acumulador.indexOf(11);
-        if (index !== -1 && acumulador[1]==11){
+        if (index !== -1 && acumulador.includes(11)){
             acumulador[index] = 1;
             puntosJugador = acumulador.reduce((total, card) => total+card)
             window.alert("As cambia de valor de 11 a 1");
