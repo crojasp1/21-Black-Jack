@@ -1,0 +1,8 @@
+export { crearDeck } from './create-deck';
+export { pedirCarta } from './ask-card';
+export { valorCarta }  from './card-value';
+export { computerTurn } from './computer-turn';
+export { demora } from './delay';
+export { crearCarta } from './create-card';
+export { startGame } from './start-game';
+
