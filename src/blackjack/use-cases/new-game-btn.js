@@ -1,6 +1,6 @@
 import { startGame, demora } from './';
 
-const nuevoJuego = async (aside, types, specials, btnNuevoJuego, deck, acumulador, puntajeJugador, puntajeComputador, puntosJugador, puntosComputador, btnDetener, btnPedir ) => {
+const nuevoJuego = async (acumulador, aside, types, specials, btnNuevoJuego, deck, puntajeJugador, puntajeComputador, puntosJugador, puntosComputador, btnDetener, btnPedir ) => {
     aside[0].style.display = 'none';
     
     btnNuevoJuego.innerText = 'Nuevo juego';
@@ -11,7 +11,7 @@ const nuevoJuego = async (aside, types, specials, btnNuevoJuego, deck, acumulado
 
     await demora(1000);
 
-    acumulador = [];
+    acumulador.length = 0;
     puntajeJugador.innerText = 0
     puntajeComputador[1].innerText = 0;
 

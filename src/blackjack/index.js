@@ -35,7 +35,7 @@ btnDetener.addEventListener('click', () => {
 });
 
 btnNuevoJuego.addEventListener('click', async () => {
- const resultado = await nuevoJuego(aside, types, specials, btnNuevoJuego, deck, acumulador, puntajeJugador, puntajeComputador, puntosJugador, puntosComputador, btnDetener, btnPedir);
+ const resultado = await nuevoJuego(acumulador, aside, types, specials, btnNuevoJuego, deck, puntajeJugador, puntajeComputador, puntosJugador, puntosComputador, btnDetener, btnPedir);
 
     deck = resultado.deck;
     puntosJugador = resultado.puntosJugador;
