@@ -1,4 +1,4 @@
-import { crearDeck, valorCarta, pedirCarta, computerTurn, demora, crearCarta, startGame } from './use-cases/index';
+import { crearDeck, valorCarta, pedirCarta, computerTurn, demora, crearCarta, startGame, nuevoJuego, botonPedir } from './use-cases/index';
 
 (() =>{
 let deck = [],
@@ -25,37 +25,8 @@ const btnPedir = document.querySelector('#btn-pedir'),
 // Eventos
 
 btnPedir.addEventListener('click', () =>{
+  puntosJugador = botonPedir(deck, jugadorCartas, acumulador, puntosJugador, puntajeJugador, btnPedir, aside);
 
-    let carta = pedirCarta(deck);
-    crearCarta(jugadorCartas, carta);
-    acumulador.push(valorCarta(carta));
-    puntosJugador = puntosJugador + valorCarta(carta);
-    puntajeJugador.innerText = puntosJugador;
-
-    if(puntosJugador > 21){
-        
-        let index = acumulador.indexOf(11);
-        if (index !== -1 && acumulador.includes(11)){
-            acumulador[index] = 1;
-            puntosJugador = acumulador.reduce((total, card) => total+card)
-            window.alert("As cambia de valor de 11 a 1");
-            puntajeJugador.innerText = puntosJugador;
-
-        }else{
-            btnPedir.disabled = true;
-            aside[1].style.display = 'flex';
-            
-        }
-       
-    }else if (puntosJugador == 21){
-        btnPedir.disabled = true;
-        aside[2].style.display = 'flex';
-        
-    }
-    
-    console.log('baraja', deck);
-    console.log(carta);
-    console.log('puntos Jugador', puntosJugador);
 }
 );
 
@@ -64,36 +35,11 @@ btnDetener.addEventListener('click', () => {
 });
 
 btnNuevoJuego.addEventListener('click', async () => {
+ const resultado = await nuevoJuego(aside, types, specials, btnNuevoJuego, deck, acumulador, puntajeJugador, puntajeComputador, puntosJugador, puntosComputador, btnDetener, btnPedir);
 
-    aside[0].style.display = 'none';
-    
-    btnNuevoJuego.innerText = 'Nuevo juego';
-     deck = startGame(deck, types, specials);
-
-    let imagenes = document.querySelectorAll('img');
-    imagenes.forEach( (img, index) => setTimeout(() => img.remove() , index*300) );
-
-    await demora(1000);
-
-    acumulador = [];
-    puntajeJugador.innerText = 0
-    puntajeComputador[1].innerText = 0;
-
-    puntosJugador = 0;
-    puntosComputador = 0;
-
-    if (aside[1].style.display == 'flex' || aside[2].style.display == 'flex') {
-        aside[1].style.display = 'none';
-        aside[2].style.display = 'none';
-    }
-    btnDetener.disabled = false;
-    btnPedir.disabled = false;
-    
-    btnDetener.style.backgroundColor = "#0069d9";
-
-    console.log('puntosjaJug', puntajeJugador.innerText);
-    console.log('deck', deck);
-
+    deck = resultado.deck;
+    puntosJugador = resultado.puntosJugador;
+    puntosComputador = resultado.puntosComputador;
 } );
 
 })();

@@ -5,4 +5,5 @@ export { computerTurn } from './computer-turn';
 export { demora } from './delay';
 export { crearCarta } from './create-card';
 export { startGame } from './start-game';
-
+export { nuevoJuego } from './new-game-btn';
+export { botonPedir } from './ask-btn';
